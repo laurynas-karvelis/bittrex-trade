@@ -1,6 +1,6 @@
 {
   "name": "bittrex-trade",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Bittrex.com Limit Buy and Sell classes that retry a trade until entire required quantity is filled",
   "main": "index.js",
   "repository": "git@github.com:laurynas-karvelis/bittrex-trade.git",

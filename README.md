@@ -23,13 +23,26 @@ Example usage of this module:
 ```javascript 1.6
 const {PrivateApi} = require('bittrex-promised-api');
 const {Buy, Sell} = require('bittrex-trade');
-
 const privateApi = new PrivateApi('key', 'secret');
 
-const buy = new Buy('BTC-NEO', 0.5, privateApi);
-const sell = new Sell('BTC-NEO', 200, privateApi);
 
 // to buy NEO coins worth of 0.5 BTC
+const buy = new Buy('BTC-NEO', 0.5, privateApi);
+
+// before executing a trade you can tap into a few exposed events
+buy.on('order-iteration-complete', (order) => {
+    // this will be called after every executed order
+    // order data will be provided too, you can use this even listener
+    // for more verbose logging, trade sync with db etc...
+    console.log(order);
+});
+
+buy.on('trade-complete', () => {
+    // another way bittrex-trade tells about complete trade
+    // some listener can do some async off-promise-chain logic here 
+});
+
+// now execute the trade
 buy.execute()
     .then(() => {
         console.log(buy.isComplete);
@@ -45,7 +58,15 @@ buy.execute()
     })
     .catch(console.error);
 
+
 // to sell 200 NEO coins..
+const sell = new Sell('BTC-NEO', 200, privateApi);
+
+// Sell instances share same events as both Buy and Sell classes are children of Trade Class
+sell.on('order-iteration-complete', (order) => {});
+sell.on('trade-complete', () => {});
+
+// actually execute the trade
 sell.execute()
     .then(() => {
         // your code here once done
